@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/', (req, res) => {
-  if (body.message.text === 'text') {
+  if (req.body.message.text === 'text') {
     return bot.on(message('text'), (ctx) => ctx.reply('Hello'));
   }
 });
