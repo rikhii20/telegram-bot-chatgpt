@@ -6,22 +6,25 @@ const { Telegraf } = require('telegraf');
 const axios = require('axios');
 const port = process.env.PORT || 8080;
 const { Configuration, OpenAIApi } = require('openai');
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-const apiToken = process.env.TELEGRAM_TOKEN;
-const hookUrl = process.env.HOOK_URL;
-const url = 'https://api.telegram.org/bot';
 
-const bot = new Telegraf(apiToken);
+const telegramToken = process.env.TELEGRAM_TOKEN;
+const hookUrl = process.env.HOOK_URL;
+const telegramUrl = process.env.TELEGRAM_URL;
+
+// instance
+const bot = new Telegraf(telegramToken);
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY
 });
 const openai = new OpenAIApi(configuration);
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 const init = async () => {
   try {
     const res = await axios.get(
-      `https://${url}${apiToken}/setwebhook?url=${hookUrl}`
+      `${telegramUrl}${telegramToken}/setwebhook?url=${hookUrl}`
     );
     console.log(res.data);
   } catch (error) {
@@ -44,7 +47,7 @@ app.post('/', async (req, res) => {
       messages: [{ role: 'user', content: msg }]
     });
     const message = completion.data.choices[0].message.content;
-    await axios.post(`${url}${apiToken}/sendMessage`, {
+    await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
       chat_id: chatId,
       text: message
     });
@@ -54,29 +57,9 @@ app.post('/', async (req, res) => {
   }
 });
 
-// bot.hears('animal', async (ctx) => {
-//   try {
-//     const completion = await openai.createChatCompletion({
-//       model: 'gpt-3.5-turbo',
-//       messages: [{ role: 'user', content: 'hello world' }]
-//     });
-//     const message = completion.data.choices[0].message.content;
-//     bot.telegram.sendMessage(ctx.chat.id, message, {});
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
-// bot.launch();
+// bot.launch(); -> test in local environment
+
 app.listen(port, async () => {
   console.log('app is running');
   await init();
 });
-// bot
-//   .launch({
-//     webhook: {
-//       domain: 'https://telegram-bot-chatgpt-ghtg.onrender.com',
-//       port: port
-//     }
-//   })
-//   .then(() => console.log('app is running'))
-//   .catch((err) => console.log(err));
