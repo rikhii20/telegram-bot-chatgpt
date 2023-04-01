@@ -9,26 +9,34 @@ const port = process.env.PORT || 8080;
 const { Configuration, OpenAIApi } = require('openai');
 
 const apiToken = process.env.TELEGRAM_TOKEN;
-const url = 'https://api.telegram.org/bot';
 
 const bot = new Telegraf(apiToken);
-// const configuration = new Configuration({
-//   apiKey: process.env.OPENAI_API_KEY
-// });
-// const openai = new OpenAIApi(configuration);
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY
+});
+const openai = new OpenAIApi(configuration);
 
 bot.command('start', (ctx) => {
   bot.telegram.sendMessage(
     ctx.chat.id,
-    'Hello there! Welcome to the Code Capsules telegram bot.\nI respond to /ethereum. Please try it'
+    'Hello there! Welcome to the AwesomeBot 👋'
   );
 });
 
-bot.hears('hello', (ctx) => ctx.reply('hello too'));
-bot.on(message('test'), (ctx) => ctx.reply('test too'));
-
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+bot.command('ethereum', (ctx) => {
+  var rate;
+  console.log(ctx);
+  axios
+    .get(
+      `https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`
+    )
+    .then((response) => {
+      console.log(response.data);
+      rate = response.data.ethereum;
+      const message = `Hello, today the ethereum price is ${rate.usd}USD`;
+      bot.telegram.sendMessage(ctx.chat.id, message, {});
+    });
+});
 
 bot
   .launch({
@@ -39,6 +47,3 @@ bot
   })
   .then(() => console.log('app is running'))
   .catch((err) => console.log(err));
-// bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com');
-// bot.launch();
-// app.listen(port, () => console.log('app is running at port', port));
