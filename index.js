@@ -14,7 +14,7 @@ const url = 'https://api.telegram.org/bot';
 
 const bot = new Telegraf(apiToken);
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: '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'
 });
 const openai = new OpenAIApi(configuration);
 
@@ -33,12 +33,12 @@ app.post('/', async (req, res) => {
   const chatId = req.body.message.chat.id;
 
   try {
-    console.log(req.body);
     const completion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: req.body.message }]
+      messages: [{ role: 'user', content: req.body.message.text }]
     });
     const message = completion.data.choices[0].message.content;
+    console.log(message);
     await axios.post(
       `https://api.telegram.org/bot5869861600:AAGTKI_i-oFmxN1ELMaSaVqbCy9v_5iHeg0/sendMessage`,
       {
