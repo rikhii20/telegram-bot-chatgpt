@@ -6,7 +6,8 @@ const { Telegraf } = require('telegraf');
 const axios = require('axios');
 const port = process.env.PORT || 8080;
 const { Configuration, OpenAIApi } = require('openai');
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 const apiToken = process.env.TELEGRAM_TOKEN;
 const baseUrl = process.env.PATH;
 const url = 'https://api.telegram.org/bot';
