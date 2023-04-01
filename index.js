@@ -9,6 +9,7 @@ const port = process.env.PORT || 8080;
 const { Configuration, OpenAIApi } = require('openai');
 
 const apiToken = process.env.TELEGRAM_TOKEN;
+const url = 'https://api.telegram.org/bot';
 
 const bot = new Telegraf(apiToken);
 // const configuration = new Configuration({
@@ -16,33 +17,28 @@ const bot = new Telegraf(apiToken);
 // });
 // const openai = new OpenAIApi(configuration);
 
-// app.use(bot.webhookCallback('/'));
-// bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com/');
-
-// bot.command('start', (ctx) => {
-//   bot.telegram.sendMessage(
-//     ctx.chat.id,
-//     'Hello there! Welcome to the Code Capsules telegram bot.\nI respond to /ethereum. Please try it'
-//   );
-// });
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.post('/', (req, res) => {
-  console.log(req.body);
-  bot.hears('hello', (ctx) => ctx.reply('haiiii'));
+bot.command('start', (ctx) => {
+  bot.telegram.sendMessage(
+    ctx.chat.id,
+    'Hello there! Welcome to the Code Capsules telegram bot.\nI respond to /ethereum. Please try it'
+  );
 });
 
-// bot
-//   .launch({
-//     webhook: {
-//       domain: 'https://telegram-bot-chatgpt-ghtg.onrender.com',
-//       port: port
-//     }
-//   })
-//   .then((data) => console.log('app is running'))
-//   .catch((err) => console.log(err));
-bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com');
+bot.hears('hello', (ctx) => ctx.reply('hello too'));
+bot.on(message('test'), (ctx) => ctx.reply('test too'));
+
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+
+bot
+  .launch({
+    webhook: {
+      domain: 'https://telegram-bot-chatgpt-ghtg.onrender.com',
+      port: port
+    }
+  })
+  .then(() => console.log('app is running'))
+  .catch((err) => console.log(err));
+// bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com');
 // bot.launch();
-app.listen(port, () => console.log('app is running at port', port));
+// app.listen(port, () => console.log('app is running at port', port));
