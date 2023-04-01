@@ -17,8 +17,8 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 app.post('/', (req, res) => {
-  console.log(req.body);
-  bot.hears('animal', async (ctx) => {
+  console.log(req.body.message.text);
+  bot.hears(req.body.message.text, async (ctx) => {
     try {
       const completion = await openai.createChatCompletion({
         model: 'gpt-3.5-turbo',
