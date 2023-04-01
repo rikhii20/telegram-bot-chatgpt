@@ -14,7 +14,7 @@ const url = 'https://api.telegram.org/bot';
 
 const bot = new Telegraf(apiToken);
 const configuration = new Configuration({
-  apiKey: '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'
+  apiKey: process.env.OPENAI_API_KEY
 });
 const openai = new OpenAIApi(configuration);
 
