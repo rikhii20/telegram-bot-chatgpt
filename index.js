@@ -27,7 +27,8 @@ const openai = new OpenAIApi(configuration);
 // });
 
 app.post('/', (req, res) => {
-  console.log(req.body);
+  console.log('masuk');
+  console.log(req);
   return bot.on(message('text'), (ctx) => ctx.reply('Hello'));
 });
 
