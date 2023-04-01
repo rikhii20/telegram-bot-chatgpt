@@ -16,8 +16,10 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 app.post('/', (req, res) => {
-  if (req.body === 'hi') {
-    return bot.hears(req.body, (ctx) => ctx.reply(res.send('welcome! 👋')));
+  if (req.body.message === 'hi') {
+    return bot.hears(req.body.message, (ctx) =>
+      ctx.reply(res.send('welcome! 👋'))
+    );
   }
 });
 
