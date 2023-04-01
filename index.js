@@ -38,7 +38,11 @@ app.post('/', async (req, res) => {
 
   try {
     if (msg.match(/\/start/gi)) {
-      bot.command('start', (ctx) => ctx.reply('Welcome 👋\nmay I help you?'));
+      const text = 'Welcome 👋\nmay I help you?';
+      await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
+        chat_id: chatId,
+        text: text
+      });
       return res.send();
     }
 
