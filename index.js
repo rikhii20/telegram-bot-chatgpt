@@ -30,7 +30,7 @@ const init = async () => {
 };
 
 app.post('/', async (req, res) => {
-  const chatId = req.body;
+  const chatId = req.body.message.chat.id;
 
   try {
     const completion = await openai.createChatCompletion({
