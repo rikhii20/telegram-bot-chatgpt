@@ -35,14 +35,14 @@ app.post('/', (req, res) => {
   return bot.on(message('text'), (ctx) => ctx.reply('Hello'));
 });
 
-bot
-  .launch({
-    webhook: {
-      domain: 'https://telegram-bot-chatgpt-ghtg.onrender.com',
-      port: port
-    }
-  })
-  .then((data) => console.log('app is running'))
-  .catch((err) => console.log(err));
-// bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com');
-// app.listen(port, () => console.log('app is running at port', port));
+// bot
+//   .launch({
+//     webhook: {
+//       domain: 'https://telegram-bot-chatgpt-ghtg.onrender.com',
+//       port: port
+//     }
+//   })
+//   .then((data) => console.log('app is running'))
+//   .catch((err) => console.log(err));
+bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com');
+app.listen(port, () => console.log('app is running at port', port));
