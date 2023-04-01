@@ -20,7 +20,7 @@ const openai = new OpenAIApi(configuration);
 const init = async () => {
   try {
     const setWebhook = await axios.get(
-      `${url}${apiToken}/setWebhook?url=${baseUrl}`
+      `${url}${apiToken}/setWebhook?url='https://telegram-bot-chatgpt-ghtg.onrender.com`
     );
     console.log(setWebhook);
   } catch (error) {
