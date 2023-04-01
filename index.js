@@ -22,7 +22,7 @@ const init = async () => {
     const setWebhook = await axios.get(
       `${url}${apiToken}/setWebhook?url='https://telegram-bot-chatgpt-ghtg.onrender.com`
     );
-    console.log(setWebhook);
+    console.log(setWebhook.data);
   } catch (error) {
     console.log(error);
   }
