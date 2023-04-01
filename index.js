@@ -27,7 +27,10 @@ bot.command('start', (ctx) => {
   );
 });
 
-bot.on(message('text'), (ctx) => ctx.reply('Hello'));
+app.post('/', (req, res) => {
+  console.log(req.body);
+  return bot.on(message('text'), (ctx) => ctx.reply('Hello'));
+});
 
 // bot.command('animal', (ctx) => {
 //   bot.telegram.sendMessage(
