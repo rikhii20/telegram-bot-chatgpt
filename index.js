@@ -19,19 +19,20 @@ const bot = new Telegraf(apiToken);
 // app.use(bot.webhookCallback('/'));
 // bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com/');
 
-// bot.command('start', (ctx) => {
-//   bot.telegram.sendMessage(
-//     ctx.chat.id,
-//     'Hello there! Welcome to the Code Capsules telegram bot.\nI respond to /ethereum. Please try it'
-//   );
-// });
+bot.command('start', (ctx) => {
+  bot.telegram.sendMessage(
+    ctx.chat.id,
+    'Hello there! Welcome to the Code Capsules telegram bot.\nI respond to /ethereum. Please try it'
+  );
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/', (req, res) => {
-  if (req.body.message.text === 'text') {
-    return bot.on(message('text'), (ctx) => ctx.reply('Hello'));
+  console.log(req.body);
+  if (req.body.message.text === 'hello') {
+    return bot.hears('hello', (ctx) => ctx.reply('haiiii'));
   }
 });
 
@@ -45,4 +46,5 @@ app.post('/', (req, res) => {
 //   .then((data) => console.log('app is running'))
 //   .catch((err) => console.log(err));
 bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com');
-app.listen(port, () => console.log('app is running at port', port));
+// bot.launch();
+// app.listen(port, () => console.log('app is running at port', port));
