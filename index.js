@@ -21,6 +21,9 @@ app.post('/', (req, res) => {
   }
 });
 
+app.use(bot.webhookCallback('/'));
+bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com/');
+
 // bot.command('start', (ctx) => {
 //   bot.telegram.sendMessage(
 //     ctx.chat.id,
