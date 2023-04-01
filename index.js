@@ -39,10 +39,13 @@ app.post('/', async (req, res) => {
       messages: [{ role: 'user', content: req.body.message }]
     });
     const message = completion.data.choices[0].message.content;
-    await axios.post(`${TELEGRAM_API}/sendMessage`, {
-      chat_id: chatId,
-      text: message
-    });
+    await axios.post(
+      `https://api.telegram.org/bot5869861600:AAGTKI_i-oFmxN1ELMaSaVqbCy9v_5iHeg0/sendMessage`,
+      {
+        chat_id: chatId,
+        text: message
+      }
+    );
     return res.send();
   } catch (error) {
     console.log(error);
