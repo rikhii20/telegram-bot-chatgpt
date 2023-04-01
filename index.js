@@ -30,9 +30,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/', (req, res) => {
-  console.log(req);
-  console.log('masuk');
-  return bot.on(message('text'), (ctx) => ctx.reply('Hello'));
+  if (body.message.text === 'text') {
+    return bot.on(message('text'), (ctx) => ctx.reply('Hello'));
+  }
 });
 
 // bot
