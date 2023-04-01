@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/', (req, res) => {
   console.log(req);
   console.log('masuk');
-  bot.on(message('text'), (ctx) => ctx.reply('Hello'));
+  return bot.on(message('text'), (ctx) => ctx.reply('Hello'));
 });
 
 bot
