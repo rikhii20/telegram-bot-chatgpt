@@ -30,11 +30,13 @@ const init = async () => {
 };
 
 app.post('/', async (req, res) => {
+  const chatId = req.body.message.chat.id;
+
   try {
     console.log(req.body);
     const completion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: 'hello world' }]
+      messages: [{ role: 'user', content: req.body.message }]
     });
     const message = completion.data.choices[0].message.content;
     await axios.post(`${TELEGRAM_API}/sendMessage`, {
