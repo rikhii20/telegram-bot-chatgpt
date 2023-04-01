@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const { Telegraf } = require('telegraf');
+const { message } = require('telegraf/filters');
 const axios = require('axios');
 const port = process.env.PORT || 8080;
 const { Configuration, OpenAIApi } = require('openai');
@@ -15,23 +16,18 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-app.post('/', (req, res) => {
-  if (req.body.message === 'hi') {
-    return bot.hears(req.body.message, (ctx) =>
-      ctx.reply(res.send('welcome! 👋'))
-    );
-  }
+// app.use(bot.webhookCallback('/'));
+// bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com/');
+
+bot.command('start', (ctx) => {
+  console.log(ctx);
+  bot.telegram.sendMessage(
+    ctx.chat.id,
+    'Hello there! Welcome to the Code Capsules telegram bot.\nI respond to /ethereum. Please try it'
+  );
 });
 
-app.use(bot.webhookCallback('/'));
-bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com/');
-
-// bot.command('start', (ctx) => {
-//   bot.telegram.sendMessage(
-//     ctx.chat.id,
-//     'Hello there! Welcome to the Code Capsules telegram bot.\nI respond to /ethereum. Please try it'
-//   );
-// });
+bot.on(message('text'), (ctx) => ctx.reply('Hello'));
 
 // bot.command('animal', (ctx) => {
 //   bot.telegram.sendMessage(
@@ -40,5 +36,13 @@ bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com/');
 //   );
 // });
 
-// bot.launch();
-app.listen(port, () => console.log('app is running at port', port));
+bot
+  .launch({
+    webhook: {
+      domain: 'https://telegram-bot-chatgpt-ghtg.onrender.com',
+      port: port
+    }
+  })
+  .then((data) => console.log('app is running'))
+  .catch((err) => console.log(err));
+// app.listen(port, () => console.log('app is running at port', port));
