@@ -9,7 +9,7 @@ const { Configuration, OpenAIApi } = require('openai');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 const apiToken = process.env.TELEGRAM_TOKEN;
-const baseUrl = process.env.PATH;
+const hookUrl = process.env.HOOK_URL;
 const url = 'https://api.telegram.org/bot';
 
 const bot = new Telegraf(apiToken);
@@ -21,7 +21,7 @@ const openai = new OpenAIApi(configuration);
 const init = async () => {
   try {
     const res = await axios.get(
-      `https://api.telegram.org/bot5869861600:AAGTKI_i-oFmxN1ELMaSaVqbCy9v_5iHeg0/setwebhook?url=https://telegram-bot-chatgpt-ghtg.onrender.com`
+      `https://${url}${apiToken}/setwebhook?url=${hookUrl}`
     );
     console.log(res.data);
   } catch (error) {
@@ -31,20 +31,23 @@ const init = async () => {
 
 app.post('/', async (req, res) => {
   const chatId = req.body.message.chat.id;
+  const msg = req.body.message.text;
 
   try {
+    if (msg.match(/\/start/gi)) {
+      bot.command('start', (ctx) => ctx.reply('Welcome 👋\nmay I help you?'));
+      return res.send();
+    }
+
     const completion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: req.body.message.text }]
+      messages: [{ role: 'user', content: msg }]
     });
     const message = completion.data.choices[0].message.content;
-    await axios.post(
-      `https://api.telegram.org/bot5869861600:AAGTKI_i-oFmxN1ELMaSaVqbCy9v_5iHeg0/sendMessage`,
-      {
-        chat_id: chatId,
-        text: message
-      }
-    );
+    await axios.post(`${url}${apiToken}/sendMessage`, {
+      chat_id: chatId,
+      text: message
+    });
     return res.send();
   } catch (error) {
     console.log(error);
