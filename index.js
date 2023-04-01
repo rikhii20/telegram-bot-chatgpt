@@ -9,6 +9,7 @@ const port = process.env.PORT || 80;
 const { Configuration, OpenAIApi } = require('openai');
 
 const apiToken = process.env.TELEGRAM_TOKEN;
+const url = 'https://api.telegram.org/bot';
 
 const bot = new Telegraf(apiToken);
 const configuration = new Configuration({
@@ -17,20 +18,37 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 app.post('/', (req, res) => {
-  console.log(req.body.message.text);
-  bot.hears(req.body.message.text, async (ctx) => {
-    try {
-      const completion = await openai.createChatCompletion({
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: 'hello world' }]
+  const chatId = req.body.message.chat.id;
+  const sentMessage = req.body.message.text;
+  console.log(req.body);
+  if (sentMessage.match(/hello/gi)) {
+    axios
+      .post(`${url}${apiToken}/sendMessage`, {
+        chat_id: chatId,
+        text: 'hello back 👋'
+      })
+      .then((response) => {
+        res.status(200).send(response);
+      })
+      .catch((error) => {
+        res.send(error);
       });
-      const message = completion.data.choices[0].message.content;
-      bot.telegram.sendMessage(ctx.chat.id, message, {});
-    } catch (error) {
-      console.log(error);
-      console.log(error);
-    }
-  });
+  } else {
+    res.status(200).send({});
+  }
+
+  // bot.hears(req.body.message.text, async (ctx) => {
+  //   try {
+  //     const completion = await openai.createChatCompletion({
+  //       model: 'gpt-3.5-turbo',
+  //       messages: [{ role: 'user', content: 'hello world' }]
+  //     });
+  //     const message = completion.data.choices[0].message.content;
+  //     bot.telegram.sendMessage(ctx.chat.id, message, {});
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // });
 });
 
 // bot.launch();
