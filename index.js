@@ -47,4 +47,4 @@ app.post('/', (req, res) => {
 //   .catch((err) => console.log(err));
 bot.telegram.setWebhook('https://telegram-bot-chatgpt-ghtg.onrender.com');
 // bot.launch();
-// app.listen(port, () => console.log('app is running at port', port));
+app.listen(port, () => console.log('app is running at port', port));
