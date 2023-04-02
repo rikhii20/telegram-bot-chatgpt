@@ -37,11 +37,31 @@ app.post('/', async (req, res) => {
   } = req.body.message;
 
   try {
+    const strSplit = text.split(':');
     if (text.match(/\/start/gi)) {
       const text = 'Welcome to ProtoBot👋\nMay I help you?';
       await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
         chat_id: chatId,
         text: text
+      });
+      return res.send();
+    }
+
+    if (strSplit[0].match(/\/image/gi)) {
+      const text = 'Wait a minute...';
+      await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
+        chat_id: chatId,
+        text: text
+      });
+      const generateImage = await openai.createImage({
+        prompt: strSplit[1],
+        n: 1,
+        size: '1024x1024'
+      });
+      const image = generateImage.data.data[0].url;
+      await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
+        chat_id: chatId,
+        text: image
       });
       return res.send();
     }
