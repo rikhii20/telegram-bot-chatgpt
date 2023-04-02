@@ -40,7 +40,7 @@ app.post('/', async (req, res) => {
     const strSplit = text.split(':');
     if (text.match(/\/start/gi)) {
       const text =
-        'Welcome to ProtoBot👋\n\nCommand List :\n/start => Starting the bot\n/image:<prompt> => generating photo/image\nFree text to ask me any question';
+        'Welcome to ProtoBot👋\n\nCommand List :\n/start -> Starting the bot\n/image:<prompt> -> generating photo/image\nFree text to ask me any question with any languages';
       await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
         chat_id: chatId,
         text: text
@@ -49,7 +49,7 @@ app.post('/', async (req, res) => {
     }
 
     if (strSplit[0].match(/\/image/gi)) {
-      const text = 'Wait a minute...';
+      const text = 'Wait a second...';
       await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
         chat_id: chatId,
         text: text
