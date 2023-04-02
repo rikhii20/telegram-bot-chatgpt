@@ -39,7 +39,8 @@ app.post('/', async (req, res) => {
   try {
     const strSplit = text.split(':');
     if (text.match(/\/start/gi)) {
-      const text = 'Welcome to ProtoBot👋\nMay I help you?';
+      const text =
+        'Welcome to ProtoBot👋\n\nCommand List :\n/start => Starting the bot\n/image:<prompt> => generating photo/image\nFree text to ask me any question';
       await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
         chat_id: chatId,
         text: text
@@ -55,7 +56,7 @@ app.post('/', async (req, res) => {
       });
       const generateImage = await openai.createImage({
         prompt: strSplit[1],
-        n: 1,
+        n: 3,
         size: '1024x1024'
       });
       const image = generateImage.data.data[0].url;
