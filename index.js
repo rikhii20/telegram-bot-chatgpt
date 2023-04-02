@@ -59,11 +59,15 @@ app.post('/', async (req, res) => {
         n: 3,
         size: '1024x1024'
       });
-      const image = generateImage.data.data[0].url;
-      await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
-        chat_id: chatId,
-        text: image
-      });
+      const images = generateImage.data.data;
+      await Promise.all(
+        images.map(async (image) => {
+          await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
+            chat_id: chatId,
+            text: image
+          });
+        })
+      );
       return res.send();
     }
 
