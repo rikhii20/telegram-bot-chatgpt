@@ -40,7 +40,7 @@ app.post('/', async (req, res) => {
     const strSplit = text.split(':');
     if (text.match(/\/start/gi)) {
       const text =
-        'Welcome to ProtoBot👋\n\n**You can control me by sending these commands**:\n\n/start - Starting the bot\n/image:{free-text} - generating photo/image\nFree text to ask me any question with any languages';
+        'Welcome to ProtoBot👋\n\n**You can control me by sending these commands**:\n\n/start - starting the bot\n/image:{free-text} - generating photo/image\nFree text to ask me any question with any languages';
       await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
         chat_id: chatId,
         text: text
