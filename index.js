@@ -86,6 +86,7 @@ app.post('/', async (req, res) => {
       return res.send();
     } catch (error) {
       console.log(error);
+      return res.send(error)
     }
   }
   
