@@ -68,9 +68,14 @@ app.post('/', async (req, res) => {
       return res.send();
     }
 
+    const msg = 'Wait a second...';
+      await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
+        chat_id: req.body.message.chat.id,
+        text: msg
+      });
     const completion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: text }]
+      messages: [{ role: 'user', content: req.body.message.text }]
     });
     const message = completion.data.choices[0].message.content;
     await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
