@@ -31,20 +31,18 @@ const init = async () => {
 };
 
 app.post('/', async (req, res) => {
-  
-
   try {
     const {
-      chat: { id: chatId },
+      chat,
       text
     } = req.body.message;
-    
+
     const strSplit = text.split(':');
     if (text.match(/\/start/gi)) {
       const text =
         'Welcome to ProtoBot👋\n\nYou can control me by sending these commands:\n\n/start - starting the bot\n/image:{free-text} - generating photo/image\nFree text to ask me any question with any languages';
       await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
-        chat_id: chatId,
+        chat_id: chat.id,
         text: text
       });
       return res.send();
@@ -53,7 +51,7 @@ app.post('/', async (req, res) => {
     if (strSplit[0].match(/\/image/gi)) {
       const text = 'Wait a second...';
       await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
-        chat_id: chatId,
+        chat_id: chat.id,
         text: text
       });
       const generateImage = await openai.createImage({
@@ -66,7 +64,7 @@ app.post('/', async (req, res) => {
       await Promise.all(
         images.map(async (image) => {
           await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
-            chat_id: chatId,
+            chat_id: chat.id,
             text: image.url
           });
         })
@@ -80,7 +78,7 @@ app.post('/', async (req, res) => {
     });
     const message = completion.data.choices[0].message.content;
     await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
-      chat_id: chatId,
+      chat_id: chat.id,
       text: message
     });
     return res.send();
