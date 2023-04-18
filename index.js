@@ -31,12 +31,14 @@ const init = async () => {
 };
 
 app.post('/', async (req, res) => {
-  const {
-    chat: { id: chatId },
-    text
-  } = req.body.message;
+  
 
   try {
+    const {
+      chat: { id: chatId },
+      text
+    } = req.body.message;
+    
     const strSplit = text.split(':');
     if (text.match(/\/start/gi)) {
       const text =
