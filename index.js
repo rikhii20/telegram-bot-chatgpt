@@ -32,64 +32,61 @@ const init = async () => {
 
 app.post('/', async (req, res) => {
   // req.body.message
-  if (req.body.message.text) {
-    try {
-      const strSplit = req.body.message.text.split(':');
-      if (req.body.message.text.match(/\/start/gi)) {
-        const msg =
-          'Welcome to ProtoBot👋\n\nYou can control me by sending these commands:\n\n/start - starting the bot\n/image:message - generate image\nFree text to ask me any question with any languages';
-        await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
-          chat_id: req.body.message.chat.id,
-          text: msg
-        });
-        return res.send();
-      }
-  
-      if (strSplit[0].match(/\/image/gi)) {
-        const msg = 'Wait a second...';
-        await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
-          chat_id: req.body.message.chat.id,
-          text: msg
-        });
-        const generateImage = await openai.createImage({
-          prompt: strSplit[1],
-          n: 3,
-          size: '1024x1024'
-        });
-  
-        const images = generateImage.data.data;
-        await Promise.all(
-          images.map(async (image) => {
-            await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
-              chat_id: req.body.message.chat.id,
-              text: image.url
-            });
-          })
-        );
-        return res.send();
-      }
-  
-      const msg = 'Wait a second...';
-        await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
-          chat_id: req.body.message.chat.id,
-          text: msg
-        });
-      const completion = await openai.createChatCompletion({
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: req.body.message.text }]
-      });
-      const message = completion.data.choices[0].message.content;
+  try {
+    const strSplit = req.body.message.text.split(':');
+    if (req.body.message.text.match(/\/start/gi)) {
+      const msg =
+        'Welcome to ProtoBot👋\n\nYou can control me by sending these commands:\n\n/start - starting the bot\n/image:message - generate image\nFree text to ask me any question with any languages';
       await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
         chat_id: req.body.message.chat.id,
-        text: message
+        text: msg
       });
       return res.send();
-    } catch (error) {
-      console.log(error);
-      return res.send(error)
     }
+
+    if (strSplit[0].match(/\/image/gi)) {
+      const msg = 'Wait a second...';
+      await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
+        chat_id: req.body.message.chat.id,
+        text: msg
+      });
+      const generateImage = await openai.createImage({
+        prompt: strSplit[1],
+        n: 3,
+        size: '1024x1024'
+      });
+
+      const images = generateImage.data.data;
+      await Promise.all(
+        images.map(async (image) => {
+          await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
+            chat_id: req.body.message.chat.id,
+            text: image.url
+          });
+        })
+      );
+      return res.send();
+    }
+
+    const msg = 'Wait a second...';
+    await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
+      chat_id: req.body.message.chat.id,
+      text: msg
+    });
+    const completion = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: req.body.message.text }]
+    });
+    const message = completion.data.choices[0].message.content;
+    await axios.post(`${telegramUrl}${telegramToken}/sendMessage`, {
+      chat_id: req.body.message.chat.id,
+      text: message
+    });
+    return res.send();
+  } catch (error) {
+    console.log(error);
+    return res.send(error);
   }
-  
 });
 
 // bot.launch(); -> test in local environment
